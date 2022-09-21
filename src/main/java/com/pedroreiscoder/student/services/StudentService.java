@@ -8,5 +8,7 @@ import java.util.Optional;
 public interface StudentService {
     List<Student> getStudents();
     Optional<Student> getStudent(Long id);
-    Student createStudent(Student student);
+    Student saveStudent(Student student);
+    boolean studentExists(Long id);
+    void deleteStudent(Long id);
 }

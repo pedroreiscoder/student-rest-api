@@ -27,7 +27,17 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student createStudent(Student student){
+    public Student saveStudent(Student student){
         return studentRepository.save(student);
+    }
+
+    @Override
+    public boolean studentExists(Long id){
+        return studentRepository.existsById(id);
+    }
+
+    @Override
+    public void deleteStudent(Long id){
+        studentRepository.deleteById(id);
     }
 }

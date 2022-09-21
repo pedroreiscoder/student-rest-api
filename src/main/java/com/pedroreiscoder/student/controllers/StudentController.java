@@ -41,6 +41,35 @@ public class StudentController {
     public ResponseEntity<Object> createStudent(@RequestBody @Valid StudentDTO studentDTO){
         var student = new Student();
         BeanUtils.copyProperties(studentDTO, student);
-        return ResponseEntity.status(HttpStatus.CREATED).body(studentService.createStudent(student));
+        return ResponseEntity.status(HttpStatus.CREATED).body(studentService.saveStudent(student));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateStudent(@PathVariable Long id,
+                                                @RequestBody @Valid StudentDTO studentDTO){
+        var optionalStudent = studentService.getStudent(id);
+
+        if(!optionalStudent.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student not found");
+        }
+
+        var student = optionalStudent.get();
+
+        BeanUtils.copyProperties(studentDTO, student);
+
+        return ResponseEntity.ok(studentService.saveStudent(student));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteStudent(@PathVariable Long id){
+        var studentExists = studentService.studentExists(id);
+
+        if(!studentExists){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student not found");
+        }
+
+        studentService.deleteStudent(id);
+
+        return ResponseEntity.noContent().build();
     }
 }
