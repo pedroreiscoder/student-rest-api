@@ -1,12 +1,14 @@
 package com.pedroreiscoder.student.controllers;
 
+import com.pedroreiscoder.student.DTOs.StudentDTO;
 import com.pedroreiscoder.student.models.Student;
 import com.pedroreiscoder.student.services.StudentService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -22,5 +24,23 @@ public class StudentController {
     @GetMapping
     public ResponseEntity<List<Student>> getStudents(){
         return ResponseEntity.ok(studentService.getStudents());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getStudent(@PathVariable Long id){
+        var optionalStudent = studentService.getStudent(id);
+
+        if(!optionalStudent.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student not found");
+        }
+
+        return ResponseEntity.ok(optionalStudent.get());
+    }
+
+    @PostMapping
+    public ResponseEntity<Object> createStudent(@RequestBody @Valid StudentDTO studentDTO){
+        var student = new Student();
+        BeanUtils.copyProperties(studentDTO, student);
+        return ResponseEntity.status(HttpStatus.CREATED).body(studentService.createStudent(student));
     }
 }

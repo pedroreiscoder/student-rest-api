@@ -5,6 +5,7 @@ import com.pedroreiscoder.student.repositories.StudentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -18,5 +19,15 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<Student> getStudents() {
         return studentRepository.findAll();
+    }
+
+    @Override
+    public Optional<Student> getStudent(Long id){
+        return studentRepository.findById(id);
+    }
+
+    @Override
+    public Student createStudent(Student student){
+        return studentRepository.save(student);
     }
 }
